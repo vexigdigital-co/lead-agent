@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: vexig-digital-backend
+    env: node
+    rootDir: lead-agent/backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_URL
+        value: "*"
+      # You will need to add the following secrets manually in the Render dashboard after creation:
+      # - DATABASE_URL
+      # - GROQ_API_KEY
+      # - NOTION_API_KEY
+      # - NOTION_DATABASE_ID
