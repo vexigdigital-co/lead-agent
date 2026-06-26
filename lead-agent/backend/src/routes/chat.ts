@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma'
 import { asyncHandler, AppError } from '../middleware/errorHandler'
 import { SendMessageSchema, ApiResponse } from '../types'
 import { conversationAgent } from '../agents/conversationAgent'
-import { leadPipelineQueue } from '../queues/leadPipelineQueue'
+import { runLeadPipeline } from '../agents/pipeline'
 import { randomUUID } from 'crypto'
 
 const router = Router()
@@ -102,8 +102,8 @@ router.post('/message', asyncHandler(async (req: Request, res: Response) => {
       data:  { status: 'COMPLETED' },
     })
 
-    // Queue qualifier async
-    await leadPipelineQueue.add('qualify-lead', { leadId })
+    // Run pipeline synchronously for serverless environment
+    await runLeadPipeline(leadId)
   }
 
   res.json({
